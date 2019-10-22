@@ -1,0 +1,7 @@
+<div id="root">
+	React Component Loading
+</div>
+
+<script>
+	window.game_name = "game:<%= @name %>";
+</script>
