@@ -1,5 +1,7 @@
 defmodule Chess.Game do
 
+  alias Chess.Pawn
+
   @pieces %{
     wKing: 0,
     wQueen: 1,
@@ -28,7 +30,7 @@ defmodule Chess.Game do
       "A7": @pieces.bPawn, "B7": @pieces.bPawn, "C7": @pieces.bPawn, "D7": @pieces.bPawn, "E7": @pieces.bPawn, "F7": @pieces.bPawn, "G7": @pieces.bPawn, "H7": @pieces.bPawn,
       "A8": @pieces.bRook, "B8": @pieces.bKnight, "C8": @pieces.bBishop, "D8": @pieces.bQueen, "E8": @pieces.bKing, "F8": @pieces.bBishop, "G8": @pieces.bKnight, "H8": @pieces.bRook
     },
-      cutPieces: {}
+      cutPieces: []
     }
   end
 
@@ -38,7 +40,11 @@ defmodule Chess.Game do
 
   def chessPieceSelected(game, position) do
     selectedPiece = game.board.position
-    IO.inspect(selectedPiece)
+    if selectedPiece == @pieces.bPawn do
+    
+    else
+    
+    end
 	game
   end
   

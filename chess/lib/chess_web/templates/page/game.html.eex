@@ -3,5 +3,5 @@
 </div>
 
 <script>
-	window.game_name = "game:<%= @name %>";
+	window.game_name = "games:<%= @name %>";
 </script>

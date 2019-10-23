@@ -14,13 +14,13 @@ class ChessGame extends React.Component {
         };
         
         this.resetGame = this.resetGame.bind(this);
-
-		this.channel.join()
-		   .receive("ok", this.onJoin.bind(this))
+        this.channel.join()
+           .receive("ok", this.onJoin.bind(this))
            .receive("error", resp => { console.log("Unable to join", resp) });
 	}
 
     onJoin({game}) {
+    	console.log(game);
         this.setState(game);
     }
 
@@ -31,13 +31,23 @@ class ChessGame extends React.Component {
 		this.channel.push("reset")
             .receive("ok", this.onUpdate.bind(this));	
 	}
+	
+	updateBoard({game}) {
+		console.log(game);
+	}
 
 	/**
 	 * Method to handle the click events on the DOM elements. We validate the click for a match if its corresponding match has been found by the user. Else the click would be considered as a new tile open.
 	 * @param tileId determines the id of the tile from which the event was triggered
 	 */
 	handleClick(tileId) {
+		let array = {0:"A", 1:"B", 2:"C", 3:"D", 4:"E", 5:"F", 6:"G", 7:"H"};
+		let value = Math.floor(tileId / 8) + 1;
 		
+		console.log(array[tileId % 8] + value);
+		
+		this.channel.push("positionSelected", {position: array[tileId % 8] + "" + (value)})
+			.receive("",this.updateBoard.bind(this));
 	}
 
 	render() {
@@ -53,8 +63,7 @@ class ChessGame extends React.Component {
 				alternate = !alternate;
 			}
 
-            gameTiles.push(<div className={"tiles " + ((counter % 2 == 0) ? "brown" : "gold")} id={i} onClick={() => this.handleClick(i)}>{
-				this.state.status[i] ? this.state.tiles[i] : ""}
+            gameTiles.push(<div className={"tiles " + ((counter % 2 == 0) ? "brown" : "gold")} id={i} onClick={() => this.handleClick(i)}>
 				</div>);
 				++counter;
 		}
