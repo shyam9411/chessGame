@@ -1,9 +1,53 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import wKing from '../static/images/wKing.png';
+import bKing from '../static/images/bKing.png';
+import wQueen from '../static/images/wQueen.png';
+import bQueen from '../static/images/bQueen.png';
+import wBishop from '../static/images/wBishop.png';
+import bBishop from '../static/images/bBishop.png';
+import wRook from '../static/images/wRook.png';
+import bRook from '../static/images/bRook.png';
+import wKnight from '../static/images/wKnight.png';
+import bKnight from '../static/images/bKnight.png';
+import wPawn from '../static/images/wPawn.png';
+import bPawn from '../static/images/bPawn.png';
 
 export default function game_init(root, channel) {
   ReactDOM.render(<ChessGame channel={channel} />, root);
 }
+
+// const boardConstants = [
+// 	piece_paths["wKing"],
+//     piece_paths["wQueen"],
+//     piece_paths["wBishop"],
+//     piece_paths["wKnight"],
+//     piece_paths["wRook"],
+//     piece_paths["wPawn"],
+//     piece_paths["bKing"],
+//     piece_paths["bQueen"],
+//     piece_paths["bBishop"],
+//     piece_paths["bKnight"],
+//     piece_paths["bRook"],
+//     piece_paths["bPawn"],
+//     "empty"
+// ];
+
+const boardConstants = [
+	wKing,
+    wQueen,
+    wBishop,
+    wKnight,
+    wRook,
+    wPawn,
+    bKing,
+    bQueen,
+    bBishop,
+    bKnight,
+    bRook,
+    bPawn,
+    "empty"
+];
 
 class ChessGame extends React.Component {
 	constructor(props) {
@@ -11,9 +55,13 @@ class ChessGame extends React.Component {
         this.channel = props.channel;
 
 		this.state = {
+			board: {},
+			selectedPiece: -1,
+			availableMoves: [],
+			isWhiteTurn: true
         };
         
-        this.resetGame = this.resetGame.bind(this);
+		this.resetGame = this.resetGame.bind(this);
         this.channel.join()
            .receive("ok", this.onJoin.bind(this))
            .receive("error", resp => { console.log("Unable to join", resp) });
@@ -33,7 +81,7 @@ class ChessGame extends React.Component {
 	}
 	
 	updateBoard({game}) {
-		console.log(game);
+		this.setState(game);
 	}
 
 	/**
@@ -47,7 +95,7 @@ class ChessGame extends React.Component {
 		console.log(array[tileId % 8] + value);
 		
 		this.channel.push("positionSelected", {position: array[tileId % 8] + "" + (value)})
-			.receive("",this.updateBoard.bind(this));
+			.receive("correct",this.updateBoard.bind(this));
 	}
 
 	render() {
@@ -57,13 +105,22 @@ class ChessGame extends React.Component {
 		let gameTiles = [];
 		let counter = 0;
 		let alternate = false;
-        for (let i = 0; i < 64; i++) {
+		let alpha = -1;
+		for (let i = 0; i < 64; i++) {
 			if (i % 8 == 0) {
 				counter = alternate ? 0 : 1;
 				alternate = !alternate;
+				++alpha;
 			}
 
-            gameTiles.push(<div className={"tiles " + ((counter % 2 == 0) ? "brown" : "gold")} id={i} onClick={() => this.handleClick(i)}>
+			// console.log(this.state.board[String.fromCharCode((i % 8) + 65) + "" + (alpha+ 1)]);
+			// console.log(boardConstants[this.state.board[String.fromCharCode((i % 8) + 65) + "" + (alpha+ 1)]])
+			gameTiles.push(<div className={"tiles " + ((counter % 2 == 0) ? "brown" : "gold")} id={i} onClick={() => this.handleClick(i)}>
+				{
+					boardConstants[this.state.board[String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1)]] !== "empty" ?
+						<img src={boardConstants[this.state.board[String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1)]]} alt=""></img> : null
+
+				}
 				</div>);
 				++counter;
 		}
