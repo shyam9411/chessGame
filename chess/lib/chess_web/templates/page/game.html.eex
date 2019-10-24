@@ -4,4 +4,16 @@
 
 <script>
 	window.game_name = "games:<%= @name %>";
+	window.wKing = "<%= Routes.static_path(@conn, "/images/wKing.png") %>";
+	window.bKing = "<%= Routes.static_path(@conn, "/images/bKing.png") %>";
+	window.wKnight = "<%= Routes.static_path(@conn, "/images/wKnight.png") %>";
+	window.bKnight = "<%= Routes.static_path(@conn, "/images/bKnight.png") %>";
+	window.wRook = "<%= Routes.static_path(@conn, "/images/wRook.png") %>";
+	window.bRook = "<%= Routes.static_path(@conn, "/images/bRook.png") %>";
+	window.wBishop = "<%= Routes.static_path(@conn, "/images/wBishop.png") %>";
+	window.bBishop = "<%= Routes.static_path(@conn, "/images/bBishop.png") %>";
+	window.wQueen = "<%= Routes.static_path(@conn, "/images/wQueen.png") %>";
+	window.bQueen = "<%= Routes.static_path(@conn, "/images/bQueen.png") %>";
+	window.wPawn = "<%= Routes.static_path(@conn, "/images/wPawn.png") %>";
+	window.bPawn = "<%= Routes.static_path(@conn, "/images/bPawn.png") %>";
 </script>
