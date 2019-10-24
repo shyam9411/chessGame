@@ -85,7 +85,13 @@ class ChessGame extends React.Component {
 				alternate = !alternate;
 			}
 
-			gameTiles.push(<div className={"tiles " + ((counter % 2 == 0) ? "brown" : "gold")} id={i} onClick={() => this.handleClick(i)}>
+			let secondaryColor = (counter % 2 == 0) ? "green" : "white";
+			if (this.state.availableMoves.indexOf(String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1)) !== -1)
+				secondaryColor += " black";
+			else if (this.state.selectedPiece === String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1))
+				secondaryColor += " darkorange";
+
+			gameTiles.push(<div className={"tiles " + secondaryColor} id={i} onClick={() => this.handleClick(i)}>
 				{
 					boardConstants[this.state.board[String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1)]] !== "empty" ?
 						<img src={boardConstants[this.state.board[String.fromCharCode((i % 8) + 65) + "" + (Math.floor(i / 8)+ 1)]]} alt=""></img> : null
