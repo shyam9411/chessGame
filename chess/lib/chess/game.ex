@@ -37,12 +37,10 @@ defmodule Chess.Game do
     	},
       	selectedPiece: -1,
       	availableMoves: [],
-      	isWhiteTurn: true
+		isWhiteTurn: true,
+		countOfPlayers: 0,
+		viewMode: false  
     }
-  end
-
-  def client_view(game) do
-    game
   end
 
   def chessPositionSelected(game, position) do
@@ -82,7 +80,9 @@ defmodule Chess.Game do
   						board: game.board,
       					selectedPiece: -1,
       					availableMoves: [],
-      					isWhiteTurn: game.isWhiteTurn
+						isWhiteTurn: game.isWhiteTurn,
+						countOfPlayers: game.countOfPlayers,
+						viewMode: game.viewMode,
   					}
 		  		end
 		  	end

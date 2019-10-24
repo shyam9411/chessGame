@@ -4,6 +4,7 @@
 
 <script>
 	window.game_name = "games:<%= @name %>";
+	window.player_name = "<%= @playerName %>";
 	window.wKing = "<%= Routes.static_path(@conn, "/images/wKing.png") %>";
 	window.bKing = "<%= Routes.static_path(@conn, "/images/bKing.png") %>";
 	window.wKnight = "<%= Routes.static_path(@conn, "/images/wKnight.png") %>";

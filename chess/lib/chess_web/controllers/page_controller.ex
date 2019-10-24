@@ -5,7 +5,7 @@ defmodule ChessWeb.PageController do
     render(conn, "index.html")
   end
   
-  def games(conn, %{"name" => name}) do
-  	render(conn, "game.html", name: name)
+  def games(conn, %{"name" => name, "playerName" => playerName}) do
+  	render(conn, "game.html", name: name, playerName: playerName)
   end
 end

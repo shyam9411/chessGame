@@ -3,5 +3,6 @@
 <!-- Form styling referred from https://www.w3schools.com/html/html_forms.asp. -->
 <%= form_for @conn, "/games", fn f -> %>
       <p>Enter Game Name: <%= text_input f, :name %></p>
+      <p>Enter Player Name: <%= text_input f, :playerName %></p>
       <p><%= submit "Play" %></p>
 <% end %>

@@ -9,7 +9,9 @@ defmodule Chess.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      ChessWeb.Endpoint
+      ChessWeb.Endpoint,
+      Chess.BackupAgent,
+      Chess.GameSup,
       # Starts a worker by calling: Chess.Worker.start_link(arg)
       # {Chess.Worker, arg},
     ]
