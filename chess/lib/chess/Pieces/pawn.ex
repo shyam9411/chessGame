@@ -32,6 +32,19 @@ defmodule Chess.Pawn do
   	}
   end
   
+  def playmove(game,position,newPosition) do
+  	selectedPiece = game.board[String.to_atom(position)]
+  	tempBoard = Map.put(game.board, String.to_atom(position), @pieces.empty)
+  	newBoard = Map.put(tempBoard, String.to_atom(newPosition), selectedPiece)
+  	
+  	%{
+  		board: newBoard,
+      	selectedPiece: -1,
+      	availableMoves: [],
+      	isWhiteTurn: game.isWhiteTurn
+  	}
+  end
+  
   def getMoves(game,position) do
   	IO.inspect("Get move")
   	isWhite = isWhiteColor(game,position)
@@ -40,6 +53,16 @@ defmodule Chess.Pawn do
   		getMovesForWhitePiece(game, position)
   	else
   		getMovesForBlackPiece(game, position)
+  	end
+  end
+  
+  def getMovesWC(game,position) do
+  	isWhite = isWhiteColor(game,position)
+  	  	
+  	if game.isWhiteTurn == true do
+  		getMovesForWhitePieceWithoutCheck(game, position)
+  	else
+  		getMovesForBlackPieceWithoutCheck(game, position)
   	end
   end
   
@@ -60,12 +83,9 @@ defmodule Chess.Pawn do
   	diagonalMove2 = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition + 1)
   	
   	availableMoves = 
-  		if BoardStatus.isCheckWhenMovingPiece() == true do
-  			[]
-  		else
-  			if numberPosition == 2 do
+  		if numberPosition == 2 do
   				newPosition = characterPosition <> Integer.to_string(numberPosition + 2)
-  				if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				if game.board[String.to_atom(newPosition)] == @pieces.empty && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,newPosition)) == false do
   					[newPosition]
   				else
   					[]
@@ -75,7 +95,7 @@ defmodule Chess.Pawn do
   			end ++
   			if numberPosition != 8 do
   				newPosition = characterPosition <> Integer.to_string(numberPosition + 1)
-  				if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				if game.board[String.to_atom(newPosition)] == @pieces.empty && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,newPosition)) == false do
   					[newPosition]
   				else
   					[]
@@ -83,17 +103,16 @@ defmodule Chess.Pawn do
 	  		else
 	  			[]
   			end++
-  			if game.board[String.to_atom(diagonalMove1)] > 5 && game.board[String.to_atom(diagonalMove1)] < 12 do
+  			if game.board[String.to_atom(diagonalMove1)] > 5 && game.board[String.to_atom(diagonalMove1)] < 12 && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,diagonalMove1)) == false do
   				[diagonalMove1]
   			else
   				[]
   			end ++
-  			if game.board[String.to_atom(diagonalMove2)] > 5 && game.board[String.to_atom(diagonalMove2)] < 12 do
+  			if game.board[String.to_atom(diagonalMove2)] > 5 && game.board[String.to_atom(diagonalMove2)] < 12 && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,diagonalMove2)) == false do
   				[diagonalMove2]
   			else
   				[]
   			end
-  		end
   		
   		IO.inspect(availableMoves)
   		
@@ -113,12 +132,9 @@ defmodule Chess.Pawn do
   	diagonalMove2 = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition - 1)
   	
   	availableMoves = 
-	  	if BoardStatus.isCheckWhenMovingPiece() == true do
-  			[]
-  		else
-  			if numberPosition == 7 do
+	  	if numberPosition == 7 do
   				newPosition = characterPosition <> Integer.to_string(numberPosition - 2)
-  				if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				if game.board[String.to_atom(newPosition)] == @pieces.empty && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,newPosition)) == false do
   					[newPosition]
   				else
   					[]
@@ -128,7 +144,7 @@ defmodule Chess.Pawn do
   			end ++
   			if numberPosition != 1 do
   				newPosition = characterPosition <> Integer.to_string(numberPosition - 1)
-  				if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				if game.board[String.to_atom(newPosition)] == @pieces.empty && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,newPosition)) == false do
   					[newPosition]
   				else
   					[]
@@ -136,19 +152,112 @@ defmodule Chess.Pawn do
 	  		else
 	  			[]
   			end++
-  			if game.board[String.to_atom(diagonalMove1)] >= 0 && game.board[String.to_atom(diagonalMove1)] < 6 do
+  			if game.board[String.to_atom(diagonalMove1)] >= 0 && game.board[String.to_atom(diagonalMove1)] < 6 && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,diagonalMove1)) == false do
   				[diagonalMove1]
   			else
   				[]
   			end ++
-  			if game.board[String.to_atom(diagonalMove2)] >= 0 && game.board[String.to_atom(diagonalMove2)] < 6 do
+  			if game.board[String.to_atom(diagonalMove2)] >= 0 && game.board[String.to_atom(diagonalMove2)] < 6 && BoardStatus.isCheckWhenMovingPiece(playmove(game,position,diagonalMove2)) == false do
   				[diagonalMove2]
   			else
   				[]
   			end
-  		end
   		
   		IO.inspect(availableMoves)
+  		
+  	%{
+  		board: game.board,
+      	selectedPiece: position,
+      	availableMoves: availableMoves,
+      	isWhiteTurn: game.isWhiteTurn
+  	}
+  end
+  
+  defp getMovesForWhitePieceWithoutCheck(game, position) do
+  	characterPosition = String.at(position,0)
+  	{numberPosition, ""} = Integer.parse(String.at(position,1))
+  	<<nextChar::utf8>> = characterPosition
+  	diagonalMove1 = List.to_string([nextChar + 1]) <> Integer.to_string(numberPosition + 1)
+  	diagonalMove2 = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition + 1)
+  	
+  	availableMoves = 
+  		if numberPosition == 2 do
+  			newPosition = characterPosition <> Integer.to_string(numberPosition + 2)
+  			if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				[newPosition]
+  			else
+  				[]
+  			end
+  		else
+  			[]
+  		end ++
+  		if numberPosition != 8 do
+  			newPosition = characterPosition <> Integer.to_string(numberPosition + 1)
+  			if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				[newPosition]
+  			else
+  				[]
+  			end
+	  	else
+	  		[]
+  		end++
+  		if game.board[String.to_atom(diagonalMove1)] > 5 && game.board[String.to_atom(diagonalMove1)] < 12 do
+  			[diagonalMove1]
+  		else
+  			[]
+  		end ++
+  		if game.board[String.to_atom(diagonalMove2)] > 5 && game.board[String.to_atom(diagonalMove2)] < 12 do
+  			[diagonalMove2]
+  		else
+  			[]
+  		end
+  		
+  	%{
+  		board: game.board,
+      	selectedPiece: position,
+      	availableMoves: availableMoves,
+      	isWhiteTurn: game.isWhiteTurn
+  	}
+  end
+  
+  defp getMovesForBlackPieceWithoutCheck(game, position) do
+  	characterPosition = String.at(position,0)
+  	{numberPosition, ""} = Integer.parse(String.at(position,1))
+  	<<nextChar::utf8>> = characterPosition
+  	diagonalMove1 = List.to_string([nextChar + 1]) <> Integer.to_string(numberPosition - 1)
+  	diagonalMove2 = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition - 1)
+  	
+  	availableMoves = 
+	  	if numberPosition == 7 do
+  			newPosition = characterPosition <> Integer.to_string(numberPosition - 2)
+  			if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				[newPosition]
+  			else
+  				[]
+  			end
+  		else
+  			[]
+  		end ++
+  		if numberPosition != 1 do
+  			newPosition = characterPosition <> Integer.to_string(numberPosition - 1)
+  			if game.board[String.to_atom(newPosition)] == @pieces.empty do
+  				[newPosition]
+  			else
+  				[]
+  			end
+	  	else
+	  		[]
+  		end++
+  		if game.board[String.to_atom(diagonalMove1)] >= 0 && game.board[String.to_atom(diagonalMove1)] < 6 do
+  			[diagonalMove1]
+  		else
+  			[]
+  		end ++
+  		if game.board[String.to_atom(diagonalMove2)] >= 0 && game.board[String.to_atom(diagonalMove2)] < 6 do
+  			[diagonalMove2]
+  		else
+  			[]
+  		end
   		
   	%{
   		board: game.board,

@@ -32,6 +32,19 @@ alias Chess.BoardStatus
   	}
   end
   
+  def playmove(game,position,newPosition) do
+  	selectedPiece = game.board[String.to_atom(position)]
+  	tempBoard = Map.put(game.board, String.to_atom(position), @pieces.empty)
+  	newBoard = Map.put(tempBoard, String.to_atom(newPosition), selectedPiece)
+  	
+  	%{
+  		board: newBoard,
+      	selectedPiece: -1,
+      	availableMoves: [],
+      	isWhiteTurn: game.isWhiteTurn
+  	}
+  end
+  
   def getMoves(game,position) do
   	IO.inspect("Get move")
   	isWhite = isWhiteColor(game,position)
@@ -39,6 +52,20 @@ alias Chess.BoardStatus
   	availableMoves = getTLValidMoves(game, position, [], isWhite) ++ getTRValidMoves(game, position, [], isWhite) ++ getBLValidMoves(game, position, [], isWhite) ++ getBRValidMoves(game, position, [], isWhite)
   	
   	IO.inspect(availableMoves)
+  	
+  	%{
+  		board: game.board,
+      	selectedPiece: position,
+      	availableMoves: availableMoves,
+      	isWhiteTurn: game.isWhiteTurn
+  	}
+  	
+  end
+  
+  def getMovesWC(game,position) do
+  	isWhite = isWhiteColor(game,position)
+  	  	
+  	availableMoves = getTLValidMovesWC(game, position, [], isWhite) ++ getTRValidMovesWC(game, position, [], isWhite) ++ getBLValidMovesWC(game, position, [], isWhite) ++ getBRValidMovesWC(game, position, [], isWhite)
   	
   	%{
   		board: game.board,
@@ -66,7 +93,7 @@ alias Chess.BoardStatus
   	
   	if Map.has_key?(game.board, String.to_atom(newPosition)) do
   		if game.board[String.to_atom(newPosition)] == 12 do
-  			if BoardStatus.isCheckWhenMovingPiece() == false do
+  			if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   				getTLValidMoves(game, newPosition, moves ++ [newPosition], isWhite)
   			else
   				getTLValidMoves(game, newPosition, moves, isWhite)
@@ -75,7 +102,7 @@ alias Chess.BoardStatus
   			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
   				moves
   			else
-  				if BoardStatus.isCheckWhenMovingPiece() == false do
+  				if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   					moves ++ [newPosition]
   				else
   					moves
@@ -95,7 +122,7 @@ alias Chess.BoardStatus
   	
   	if Map.has_key?(game.board, String.to_atom(newPosition)) do
   		if game.board[String.to_atom(newPosition)] == 12 do
-  			if BoardStatus.isCheckWhenMovingPiece() == false do
+  			if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   				getTRValidMoves(game, newPosition, moves ++ [newPosition], isWhite)
   			else
   				getTRValidMoves(game, newPosition, moves, isWhite)
@@ -104,7 +131,7 @@ alias Chess.BoardStatus
   			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
   				moves
   			else
-  				if BoardStatus.isCheckWhenMovingPiece() == false do
+  				if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   					moves ++ [newPosition]
   				else
   					moves
@@ -124,7 +151,7 @@ alias Chess.BoardStatus
   	
   	if Map.has_key?(game.board, String.to_atom(newPosition)) do
   		if game.board[String.to_atom(newPosition)] == 12 do
-  			if BoardStatus.isCheckWhenMovingPiece() == false do
+  			if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   				getBLValidMoves(game, newPosition, moves ++ [newPosition], isWhite)
   			else
   				getBLValidMoves(game, newPosition, moves, isWhite)
@@ -133,7 +160,7 @@ alias Chess.BoardStatus
   			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
   				moves
   			else
-  				if BoardStatus.isCheckWhenMovingPiece() == false do
+  				if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   					moves ++ [newPosition]
   				else
   					moves
@@ -153,7 +180,7 @@ alias Chess.BoardStatus
   	
   	if Map.has_key?(game.board, String.to_atom(newPosition)) do
   		if game.board[String.to_atom(newPosition)] == 12 do
-  			if BoardStatus.isCheckWhenMovingPiece() == false do
+  			if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   				getBRValidMoves(game, newPosition, moves ++ [newPosition], isWhite)
   			else
   				getBRValidMoves(game, newPosition, moves, isWhite)
@@ -162,11 +189,95 @@ alias Chess.BoardStatus
   			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
   				moves
   			else
-  				if BoardStatus.isCheckWhenMovingPiece() == false do
+  				if BoardStatus.isCheckWhenMovingPiece(playmove(game,currentPosition,newPosition)) == false do
   					moves ++ [newPosition]
   				else
   					moves
   				end
+  			end
+  		end
+  	else
+  		moves
+  	end
+  end
+  
+  defp getTLValidMovesWC(game, currentPosition, moves, isWhite) do
+	characterPosition = String.at(currentPosition,0)
+  	{numberPosition, ""} = Integer.parse(String.at(currentPosition,1))
+  	<<nextChar::utf8>> = characterPosition
+  	newPosition = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition - 1)
+  	
+  	if Map.has_key?(game.board, String.to_atom(newPosition)) do
+  		if game.board[String.to_atom(newPosition)] == 12 do
+  			getTLValidMovesWC(game, newPosition, moves ++ [newPosition], isWhite)
+  		else
+  			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
+  				moves
+  			else
+  				moves ++ [newPosition]
+  			end
+  		end
+  	else
+  		moves
+  	end
+  end
+  
+  defp getTRValidMovesWC(game, currentPosition, moves, isWhite) do
+  	characterPosition = String.at(currentPosition,0)
+  	{numberPosition, ""} = Integer.parse(String.at(currentPosition,1))
+  	<<nextChar::utf8>> = characterPosition
+  	newPosition = List.to_string([nextChar + 1]) <> Integer.to_string(numberPosition - 1)
+  	
+  	if Map.has_key?(game.board, String.to_atom(newPosition)) do
+  		if game.board[String.to_atom(newPosition)] == 12 do
+  			getTRValidMovesWC(game, newPosition, moves ++ [newPosition], isWhite)
+  		else
+  			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
+  				moves
+  			else
+  				moves ++ [newPosition]
+  			end
+  		end
+  	else
+  		moves
+  	end
+  end
+  
+  defp getBLValidMovesWC(game, currentPosition, moves, isWhite) do
+  	characterPosition = String.at(currentPosition,0)
+  	{numberPosition, ""} = Integer.parse(String.at(currentPosition,1))
+  	<<nextChar::utf8>> = characterPosition
+  	newPosition = List.to_string([nextChar - 1]) <> Integer.to_string(numberPosition + 1)
+  	
+  	if Map.has_key?(game.board, String.to_atom(newPosition)) do
+  		if game.board[String.to_atom(newPosition)] == 12 do
+  			getBLValidMovesWC(game, newPosition, moves ++ [newPosition], isWhite)
+  		else
+  			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
+  				moves
+  			else
+  				moves ++ [newPosition]
+  			end
+  		end
+  	else
+  		moves
+  	end
+  end
+  
+  defp getBRValidMovesWC(game, currentPosition, moves, isWhite) do
+  	characterPosition = String.at(currentPosition,0)
+  	{numberPosition, ""} = Integer.parse(String.at(currentPosition,1))
+  	<<nextChar::utf8>> = characterPosition
+  	newPosition = List.to_string([nextChar + 1]) <> Integer.to_string(numberPosition + 1)
+  	
+  	if Map.has_key?(game.board, String.to_atom(newPosition)) do
+  		if game.board[String.to_atom(newPosition)] == 12 do
+  			getBRValidMovesWC(game, newPosition, moves ++ [newPosition], isWhite)
+  		else
+  			if (isWhite == true && game.board[String.to_atom(newPosition)] < 6) || (isWhite == false && game.board[String.to_atom(newPosition)] > 5) do
+  				moves
+  			else
+  				moves ++ [newPosition]
   			end
   		end
   	else
