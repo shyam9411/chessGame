@@ -44,6 +44,13 @@ defmodule Chess.Game do
   end
 
   def chessPositionSelected(game, position) do
+  	newGameState = getNewGameState(game, position)
+  	newGameState = Map.put(newGameState, :countOfPlayers, game.countOfPlayers)
+  	newGameState = Map.put(newGameState, :viewMode, game.viewMode)
+  	newGameState
+  end
+  
+  defp getNewGameState(game, position) do
   	offset = if game.isWhiteTurn == true do
   				0
   			 else
