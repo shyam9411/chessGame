@@ -1,0 +1,16 @@
+[Unit]
+Description=Chess Game - Server Side
+
+[Service]
+Type=simple
+User=elixirpractice
+Group=elixirpractice
+Restart=on-failure
+Environment=MIX_ENV=prod "PORT=4431"
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/elixirpractice/chessGame/chess
+ExecStart=bash /home/elixirpractice/chessGame/chess/start.sh
+
+[Install]
+WantedBy=multi-user.target
