@@ -72,7 +72,7 @@ class ChessGame extends React.Component {
 	 * @param tileId determines the id of the tile from which the event was triggered
 	 */
 	handleClick(tileId) {
-		if((this.state.viewMode.length > 0 && this.state.viewMode.indexOf(player_name) !== -1) || (this.state.players[player_name] !== "w" && this.state.isWhiteTurn) 
+		if(Object.keys(this.state.players).length < 2 || (this.state.viewMode.length > 0 && this.state.viewMode.indexOf(player_name) !== -1) || (this.state.players[player_name] !== "w" && this.state.isWhiteTurn) 
 					|| (this.state.players[player_name] !== "b" && !this.state.isWhiteTurn))
 			return;
 
