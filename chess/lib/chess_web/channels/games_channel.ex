@@ -12,7 +12,13 @@ defmodule ChessWeb.GamesChannel do
       playerName = Map.get(payload, List.first(Map.keys(payload)))
       foundPlayer = Map.has_key?(game.players, playerName)
       game = if (count == 2 and !foundPlayer) do
-        game = Map.put(game, :viewMode, true)
+        viewModePlayers = Map.get(game, :viewMode)
+        newList = if (Enum.count(viewModePlayers) == 0) do
+          [playerName]
+        else
+          viewModePlayers ++ [playerName]
+        end
+        game = Map.put(game, :viewMode, newList)
       else 
         if (!foundPlayer) do
           game = Map.put(game, :countOfPlayers, count + 1)
@@ -30,6 +36,7 @@ defmodule ChessWeb.GamesChannel do
         end
       end
 
+      IO.inspect(game)
       socket = socket
       |> assign(:game, game)
       |> assign(:name, name)

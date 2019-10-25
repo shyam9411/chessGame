@@ -32,7 +32,7 @@ class ChessGame extends React.Component {
 			availableMoves: [],
 			isWhiteTurn: true,
 			countOfPlayers: 0,
-			viewMode: false,
+			viewMode: [],
 			players: {}
         };
         
@@ -54,7 +54,7 @@ class ChessGame extends React.Component {
 	 * @param tileId determines the id of the tile from which the event was triggered
 	 */
 	handleClick(tileId) {
-		if(this.state.viewMode || (this.state.players[player_name] !== "w" && this.state.isWhiteTurn) 
+		if((this.state.viewMode.length > 0 && this.state.viewMode.indexOf(player_name) !== -1) || (this.state.players[player_name] !== "w" && this.state.isWhiteTurn) 
 					|| (this.state.players[player_name] !== "b" && !this.state.isWhiteTurn))
 			return;
 
@@ -102,7 +102,7 @@ class ChessGame extends React.Component {
 			<div className="tileContainer">
 				{titleEle}
 				{gameTiles}
-				{this.state.viewMode ? viewModeText : null}
+				{ this.state.viewMode.length > 0 && this.state.viewMode.indexOf(player_name) !== -1 ? viewModeText : null}
 			</div>
 		);
   	}

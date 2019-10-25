@@ -40,7 +40,7 @@ defmodule Chess.Game do
       	availableMoves: [],
 		isWhiteTurn: true,
 		countOfPlayers: 0,
-		viewMode: false,
+		viewMode: [],
 		players: %{},
 		isCheck: false,
 		isCheckMate: 0
