@@ -32,11 +32,12 @@ class ChessGame extends React.Component {
 			availableMoves: [],
 			isWhiteTurn: true,
 			countOfPlayers: 0,
-			viewMode: false
+			viewMode: false,
+			players: {}
         };
         
         this.channel.join()
-           .receive("ok", this.updateState.bind(this))
+           .receive("ok", resp => {this.updateState.bind(this); this.channel.push("broadcast", {});})
 		   .receive("error", resp => { console.log("Unable to join", resp) });
 
 		this.channel.on("broadcast", this.updateState.bind(this));
@@ -53,7 +54,8 @@ class ChessGame extends React.Component {
 	 * @param tileId determines the id of the tile from which the event was triggered
 	 */
 	handleClick(tileId) {
-		if(this.state.viewMode || this.state.countOfPlayers !== 2)
+		if(this.state.viewMode || (this.state.players[player_name] !== "w" && this.state.isWhiteTurn) 
+					|| (this.state.players[player_name] !== "b" && !this.state.isWhiteTurn))
 			return;
 
 		let array = {0:"A", 1:"B", 2:"C", 3:"D", 4:"E", 5:"F", 6:"G", 7:"H"};

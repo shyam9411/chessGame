@@ -9,10 +9,25 @@ defmodule ChessWeb.GamesChannel do
       Chess.GameServer.start(name)
       game = Chess.GameServer.peek(name)
       count = Map.get(game, :countOfPlayers)
-      game = if (count == 2) do
+      playerName = Map.get(payload, List.first(Map.keys(payload)))
+      foundPlayer = Map.has_key?(game.players, playerName)
+      game = if (count == 2 and !foundPlayer) do
         game = Map.put(game, :viewMode, true)
       else 
-        game = Map.put(game, :countOfPlayers, count + 1)
+        if (!foundPlayer) do
+          game = Map.put(game, :countOfPlayers, count + 1)
+
+          newMapOfPlayer = if (Enum.count(Map.keys(game.players)) == 0) do
+            %{playerName => "w"}
+          else 
+            Map.put(game.players, playerName, "b")
+
+          end
+
+          game = Map.put(game, :players, newMapOfPlayer)
+        else 
+          game
+        end
       end
 
       socket = socket

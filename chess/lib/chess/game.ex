@@ -39,14 +39,16 @@ defmodule Chess.Game do
       	availableMoves: [],
 		isWhiteTurn: true,
 		countOfPlayers: 0,
-		viewMode: false  
+		viewMode: false,
+		players: %{},
     }
   end
 
   def chessPositionSelected(game, position) do
   	newGameState = getNewGameState(game, position)
   	newGameState = Map.put(newGameState, :countOfPlayers, game.countOfPlayers)
-  	newGameState = Map.put(newGameState, :viewMode, game.viewMode)
+	newGameState = Map.put(newGameState, :viewMode, game.viewMode)
+	newGameState = Map.put(newGameState, :players, game.players)
   	newGameState
   end
   
@@ -89,7 +91,7 @@ defmodule Chess.Game do
       					availableMoves: [],
 						isWhiteTurn: game.isWhiteTurn,
 						countOfPlayers: game.countOfPlayers,
-						viewMode: game.viewMode,
+						viewMode: game.viewMode
   					}
 		  		end
 		  	end

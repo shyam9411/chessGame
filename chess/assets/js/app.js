@@ -22,7 +22,7 @@ import game_init from './chessGame';
 $(function() {
   let root = document.getElementById('root');
   if (root) {
-    let channel = socket.channel(window.game_name, {});
+    let channel = socket.channel(window.game_name, {player: window.player_name});
     game_init(root, channel);
   }
 });
