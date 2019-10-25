@@ -5,6 +5,9 @@ export default function game_init(root, channel) {
   ReactDOM.render(<ChessGame channel={channel} />, root);
 }
 
+/**
+ * Constants which refer to image paths for each of the chess pieces.
+ */
 const boardConstants = [
 	wKing,
     wQueen,
@@ -33,7 +36,9 @@ class ChessGame extends React.Component {
 			isWhiteTurn: true,
 			countOfPlayers: 0,
 			viewMode: [],
-			players: {}
+			players: {},
+			isCheck: false,
+			isCheckMate: 0
         };
         
         this.channel.join()
@@ -41,12 +46,25 @@ class ChessGame extends React.Component {
 		   .receive("error", resp => { console.log("Unable to join", resp) });
 
 		this.channel.on("broadcast", this.updateState.bind(this));
-
+		this.resetGame = this.resetGame.bind(this);
 	}
 
+	/**
+	 * Method to update the state of the game. It is invoked to render appropriate game status on the UI.
+	 * 
+	 * @param {game} represents the new status of the game
+	 */
 	updateState({game}) {
 		console.log(game);
 		this.setState(game);
+	}
+	
+	/**
+	 * Method to reset the game to the initial state when the game is over.
+	 */
+	resetGame() {
+		this.channel.push("resetGame", {})
+		.receive("ok", this.updateState.bind(this));
 	}
 
 	/**
@@ -72,6 +90,10 @@ class ChessGame extends React.Component {
 	render() {
 		let titleEle = <div className="titleContainer">Chess Game<br></br><h2>Player Name: {player_name}</h2></div>;
 		let viewModeText = <h2>Currently in View Mode</h2>
+		let checkStatus = <h2>Status: Check</h2>
+		let gameOver = <div className="gameOver">Game Over. Player {this.state.isCheckMate === 1 ? this.state.players[0] : this.state.players[1]} wins
+						<button className = "resetGame">Reset Game</button>
+					</div>
 
 		let gameTiles = [];
 		let counter = 0;
@@ -97,12 +119,19 @@ class ChessGame extends React.Component {
 				</div>);
 				++counter;
 		}
+
+		if (this.state.isCheckMate !== 0) {
+			return (
+				{gameOver}
+			);
+		}
 		
 		return (
 			<div className="tileContainer">
 				{titleEle}
 				{gameTiles}
 				{ this.state.viewMode.length > 0 && this.state.viewMode.indexOf(player_name) !== -1 ? viewModeText : null}
+				{this.state.isCheck ? checkStatus : null}
 			</div>
 		);
   	}
