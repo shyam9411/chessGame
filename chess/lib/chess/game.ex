@@ -6,6 +6,7 @@ defmodule Chess.Game do
   alias Chess.Bishop
   alias Chess.Queen
   alias Chess.King
+  alias Chess.BoardStatus
 
   @pieces %{
     wKing: 0,
@@ -41,6 +42,8 @@ defmodule Chess.Game do
 		countOfPlayers: 0,
 		viewMode: false,
 		players: %{},
+		isCheck: false,
+		isCheckMate: 0
     }
   end
 
@@ -49,6 +52,8 @@ defmodule Chess.Game do
   	newGameState = Map.put(newGameState, :countOfPlayers, game.countOfPlayers)
 	newGameState = Map.put(newGameState, :viewMode, game.viewMode)
 	newGameState = Map.put(newGameState, :players, game.players)
+	newGameState = Map.put(newGameState, :isCheck, BoardStatus.isCheck(newGameState))
+	newGameState = Map.put(newGameState, :isCheckMate, BoardStatus.isCheckMate(newGameState))
   	newGameState
   end
   
