@@ -28,20 +28,20 @@
 	float: left;
 }
 
-.green {
-	border: 2px solid green;
-	background: green;
+.gold {
+	border: 2px solid gold;
+	background: gold;
 }
 
-.white {
-	border: 2px solid white;
-	background: white;
+.brown {
+	border: 2px solid brown;
+	background: brown;
 }
 
 .black {
 	border: 2px solid black;
 }
 
-.darkorange {
-	border: 2px solid darkorange;
+.white {
+	border: 2px solid white;
 }
