@@ -71,6 +71,13 @@ defmodule ChessWeb.GamesChannel do
     {:noreply, socket}
   end
 
+  def handle_in("reset", _, socket) do
+    name = socket.assigns[:name]
+    game = Chess.GameServer.new(name)
+    broadcast! socket, "broadcast", %{ "game" => game}
+    {:noreply, socket}
+  end
+
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true

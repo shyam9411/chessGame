@@ -63,8 +63,7 @@ class ChessGame extends React.Component {
 	 * Method to reset the game to the initial state when the game is over.
 	 */
 	resetGame() {
-		this.channel.push("resetGame", {})
-		.receive("ok", this.updateState.bind(this));
+		this.channel.push("resetGame", {});
 	}
 
 	/**

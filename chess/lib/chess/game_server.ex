@@ -31,6 +31,10 @@ defmodule Chess.GameServer do
     def put(name, game) do
       GenServer.call(reg(name), {:put, name, game})
     end
+
+    def new(name, game) do
+      GenServer.call(reg(name), {:new, name})
+    end
   
     # Implementation
   
@@ -52,5 +56,11 @@ defmodule Chess.GameServer do
     def handle_call({:put, name, game1}, _from, game) do
       Chess.BackupAgent.put(name, game1)
       {:reply, game, game}
+    end
+
+    def handle_call({:new, name}, _from, game) do
+      game1 = Chess.Game.new()
+      Chess.BackupAgent.put(name, game1)
+      {:reply, game1, game1}
     end
   end
