@@ -1,0 +1,41 @@
+
+Web Dev Spring 2018 Project 1 Status
+
+Answer the following questions:
+
+
+1. What are the names of the members of your team?
+Tarun Kumar
+Shyam Kumar
+
+
+2. What's the URL of the github repo with your code for this project?
+https://github.com/shyam9411/chessGame.git
+
+
+3. What is the URL(s) that you deployed to?
+http://chess.neu-webapps.space/
+
+
+4. Is your app functionality complete? If not, what's missing?
+We had planned to implement a chess game along with a live chat and spectator mode for game rooms. Though we were able to complete most of the functionality, we couldn't complete the implementation of live chat. But room to live chat has been setup.
+
+
+5. Is your app properly deployed? If not, what went wrong?
+Yes
+
+
+6. What parts of the project did each team member work on?
+Each team member contributted equally in developing game logic as well as the UI for the game. We both had contributed equally towards writing the logic for chess pieces, UI development and chessboard logic. Also each of us had spent equal amount of time to devise an approach to handle the logic of the game and implemented the same. Initially it started off with Tarun working on creating the bedrock for the elixir code base, and Shyam doing the same for react. Then we kept swapping roles back and forth to get the complete overview of the game logic.
+
+
+7. Are all your third-party assets appropriately licensed and credited?
+Yes. We have used out assets from open game art website, which are open source to usage publically.
+
+
+And here's a list of tasks for grading comments. Just leave this here:
+ - Development
+ - Deployment
+ - Submission
+ - Report
+
